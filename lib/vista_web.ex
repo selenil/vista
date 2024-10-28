@@ -78,12 +78,21 @@ defmodule VistaWeb do
     end
   end
 
+  def component do
+    quote do
+      use Phoenix.Component
+    end
+  end
+
   defp html_helpers do
     quote do
       # HTML escaping functionality
       import Phoenix.HTML
       # Core UI components and translation
       import VistaWeb.CoreComponents
+      import VistaWeb.Components.Avatar
+      import VistaWeb.Components.Card
+      import VistaWeb.Components.Badge
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS

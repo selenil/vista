@@ -18,8 +18,8 @@
 // Include phoenix_html to handle method=PUT/DELETE in forms and buttons.
 import "phoenix_html"
 // Establish Phoenix Socket and LiveView configuration.
-import {Socket} from "phoenix"
-import {LiveSocket} from "phoenix_live_view"
+import { Socket } from "phoenix"
+import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
@@ -41,4 +41,12 @@ liveSocket.connect()
 // >> liveSocket.enableLatencySim(1000)  // enabled for duration of browser session
 // >> liveSocket.disableLatencySim()
 window.liveSocket = liveSocket
+
+
+// Allows to execute JS commands from the server
+window.addEventListener("phx:js-exec", ({detail}) => {
+  document.querySelectorAll(detail.to).forEach(el => {
+    liveSocket.execJS(el, el.getAttribute(detail.attr))
+  })
+})
 
