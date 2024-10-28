@@ -32,6 +32,7 @@ defmodule Vista.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:bcrypt_elixir, "~> 3.0"},
       {:phoenix, "~> 1.7.14"},
       {:phoenix_ecto, "~> 4.5"},
       {:ecto_sql, "~> 3.10"},
@@ -58,7 +59,10 @@ defmodule Vista.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:salad_ui, git: "https://github.com/bluzky/salad_ui", only: :dev}
+      {:tails, "~> 0.1.11"},
+      {:salad_ui, "~> 0.11.0", only: :dev},
+      {:tzdata, "~> 1.1"},
+      {:ex_machina, "~> 2.8.0", only: :test}
     ]
   end
 
