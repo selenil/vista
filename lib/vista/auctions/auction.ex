@@ -35,9 +35,7 @@ defmodule Vista.Auctions.Auction do
     |> validate_required([
       :title,
       :initial_price,
-      :current_price,
       :end_date,
-      :status,
       :user_id
     ])
     |> validate_number(:initial_price, greater_than: 0)
