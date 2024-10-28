@@ -21,11 +21,13 @@ import "phoenix_html"
 import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
+import hooks from "./hooks"
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
-  params: {_csrf_token: csrfToken}
+  params: {_csrf_token: csrfToken},
+  hooks: hooks
 })
 
 // Show progress bar on live navigation and form submits
@@ -50,3 +52,17 @@ window.addEventListener("phx:js-exec", ({detail}) => {
   })
 })
 
+window.addEventListener("app:optimistic_bid_update", ({target, detail}) => {
+  document.getElementById("current_price").classList.add("opacity-50")
+  bidAmount = document.getElementById("bid_input").value
+  target.innerText = `$${bidAmount}`
+})
+
+window.addEventListener("phx:bid_finished", ({detail}) => {
+  $current_price = document.getElementById("current_price")
+  $current_price.classList.remove("opacity-50")
+
+  if (detail.error) {
+    $current_price.innerText = `$${detail.current_price}`
+  }
+})
