@@ -31,8 +31,8 @@ defmodule VistaWeb.AuctionLive do
       <.auction_container auction_finished={@auction_finished}>
         <.auction_details {assigns} />
         <.bidding_form {assigns} />
-        <.auction_finished_overlay {assigns} />
       </.auction_container>
+      <.auction_finished_overlay {assigns} />
     </div>
     """
   end
