@@ -170,7 +170,7 @@ defmodule Vista.Auctions do
 
   Uses REPEATABLE READ isolation to prevent race conditions.
   """
-  def place_bid(auction_id, bid_attrs \\ %{}) do
+  def place_bid(user_email, auction_id, bid_attrs \\ %{}) do
     # Set the transaction isolation level to REPEATABLE READ.
     # This will abort the transaction if the row has been modified
     Repo.query!("SET SESSION CHARACTERISTICS AS TRANSACTION ISOLATION LEVEL REPEATABLE READ")
@@ -181,7 +181,7 @@ defmodule Vista.Auctions do
       with {:ok, valid_auction} <- validate_auction_status(locked_auction),
            {:ok, valid_bid} <- create_bid(valid_auction, bid_attrs),
            {:ok, updated_auction} <- update_auction_price(valid_auction, valid_bid.amount) do
-        broadcast({updated_auction, valid_bid}, :bid_placed)
+        broadcast({user_email, updated_auction, valid_bid}, :bid_placed)
       else
         {:error, reason} -> Repo.rollback(reason)
       end

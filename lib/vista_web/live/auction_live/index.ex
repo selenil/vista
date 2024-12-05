@@ -42,6 +42,7 @@ defmodule VistaWeb.AuctionLive do
     handle_place_bid(socket, bid_params)
   end
 
+  @impl true
   def handle_event("set_timezone", %{"timezone" => timezone}, socket) do
     {:noreply,
      socket
@@ -148,7 +149,7 @@ defmodule VistaWeb.AuctionLive do
     current_price = socket.assigns.auction.current_price
 
     case process_bid(socket, bid_params) do
-      {:ok, {auction, _bid}} ->
+      {:ok, {_user_email, auction, _bid}} ->
         {:noreply,
          socket
          |> push_event("bid_finished", %{})
@@ -162,7 +163,7 @@ defmodule VistaWeb.AuctionLive do
   defp process_bid(socket, bid_params) do
     bid_params
     |> Map.put("user_id", socket.assigns.current_user.id)
-    |> then(&Auctions.place_bid(socket.assigns.auction.id, &1))
+    |> then(&Auctions.place_bid(socket.assigns.current_user.email, socket.assigns.auction.id, &1))
   end
 
   defp handle_bid_error(socket, changeset, current_price) do
@@ -172,9 +173,9 @@ defmodule VistaWeb.AuctionLive do
     |> push_event("bid_finished", %{error: true, current_price: current_price})
   end
 
-  defp handle_bid_notification(socket, {updated_auction, bid}) do
+  defp handle_bid_notification(socket, {user_email, updated_auction, bid}) do
     socket
-    |> put_flash(:info, "#{socket.assigns.current_user.email} has made a bid of $#{bid.amount}")
+    |> put_flash(:info, "#{user_email} has made a bid of $#{bid.amount}")
     |> update_auction(updated_auction)
   end
 
