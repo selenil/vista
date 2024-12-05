@@ -4,6 +4,7 @@ defmodule VistaWeb.Components.Avatar do
 
   attr :class, :string, default: nil
   attr :rest, :global
+  slot :inner_block, required: true
 
   def avatar(assigns) do
     ~H"""
